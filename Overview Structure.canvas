@@ -1,0 +1,30 @@
+{
+	"nodes":[
+		{"id":"30b4d296b3895021","type":"text","text":"### `get_plyaer_metric()`\n#### Input:\n- User query which includes a specific name\n- For an example, \"Why Ohtani Shohei is hitting a lot of homerun?\"\n- For example, \"How can Jung Hoo Lee survive in MLB?\"\n\n#### Content/Output:\n- From the Savant.csv, search that player's name and provide Hard Hit%, Barrel %, Avg Hpyer Speed (Adjusted Exit Velo), K%, sweet spot %, whiff %\n- If this player has low k% and whiff % then he is a contact hitter so emphasize how these parameters are low compared to others\n- If this player has high Sweet spot %, then he is a mid-range hitter so emphaisze how sweet spot% is better than other players\n- If this player has high Barrel % and Hard HIt % and Adjusted EV, then he is a homerun hitter. \n\n#### Error Handling:\n- If specific player name is not included in the Savant's data, then print(f\"{name} was not recorded in 2026, because {Name} did not pass required plate appearance.)\"","x":-120,"y":-180,"width":567,"height":620},
+		{"id":"2c4bdcfd879591b6","type":"text","text":"### Chunking\n- Read .md files and create parent & children chunking\n- Parses markdown into parent and child chunkcs","x":-320,"y":-580,"width":400,"height":180},
+		{"id":"02d2a88b4638f10f","type":"text","text":"### Embedding\n- Build the embedding for each children chunks from chunking step to vectors","x":155,"y":-580,"width":389,"height":180},
+		{"id":"e87a70cacea693ca","type":"text","text":"### Indexing\n- Build the index with embedded each children with `OpenAI text-embedding-3`, `BGE-M3` or any embedding model that is suitable","x":615,"y":-580,"width":340,"height":178},
+		{"id":"5246ccffa62ce886","type":"text","text":"### Baseball .md files\n- Files contain professional coaches insight, batting mechanics, drills, and low-level batting information","x":-765,"y":-580,"width":380,"height":180},
+		{"id":"91a1bfbc5b0ab005","type":"text","text":"## RAG Diagram","x":-445,"y":-700,"width":250,"height":60},
+		{"id":"e0523b26e76a6630","type":"text","text":"### MLB Savant Data\n- This is in .csv file which contains top 150 MLB batters who outperformed batting compared to others in 2026\n\t- Power Hitter: Sort by Hard hit % or define a threshold to filter out batters\n\t- Contact Hitter: Sort by k_percent or whiff %, and define a threshold to filter out batters\n\t- Mid-range hitter: Sor by sweet spot % or define a threshold to filter out batters","x":-880,"y":310,"width":548,"height":260},
+		{"id":"3c739cb13a6f51a2","type":"text","text":"### `find_reference_player()`\n#### Input:\n- User query which asks about batting styles and similar batting mechanics.\n\n#### Content/Output:\n- Depending on user's batting style, provide top 10 batters that matches with the user's style (power hitting, contact hitting, mid-range hitting)\n- based on the query, create a list of MLB players that satisfies user's question\n- For example, 'who has the most hard hit rate?' then sort by top 10 hard hit rate % in baseball savant\n\n#### Error Handling:\n- If user asks outside of batting styles or batting related question, then simply print \"Please input batting related question\"","x":-120,"y":520,"width":567,"height":500},
+		{"id":"d13eca7f911d3a52","type":"text","text":"`Validate_Response()`\n- Validate whether generated answer contains valid schema, citations, and supported claims","x":940,"y":690,"width":567,"height":160},
+		{"id":"879831bef1bfda58","type":"text","text":"## Tools Diagram","x":-687,"y":-3,"width":225,"height":80},
+		{"id":"b62328a2a10efe80","type":"text","text":"### RAG","x":-606,"y":1710,"width":250,"height":60},
+		{"id":"2f8e9d9847386d06","x":-120,"y":1080,"width":567,"height":380,"type":"text","text":"### `get_bat_tracking_metric()`\n\"description\": (\n\n\"Look up measured MLB swing traits for one batter and season in Statcast \"\n\n\"Bat Tracking and Swing Path data. Return available average bat speed, swing \"\n\n\"length, attack angle, and swing path tilt with units, sample counts where \"\n\n\"available, source links, and an evidence ID. Report missing tracking coverage explicitly.\"\n\n),"},
+		{"id":"bb23573678e46a5c","type":"text","text":"`RAG_Retrieval()`\n- Retrieve specific mechanics, use-case, explanation, break-downs, drills, and etc from RAG Index","x":-120,"y":1540,"width":567,"height":440},
+		{"id":"2aa7ddaad09c2fdf","x":-1480,"y":700,"width":499,"height":259,"type":"text","text":"## Agent.py\nSet up the LLM client and register the three tools. Carry the hitter’s goal, level, handedness, and equipment across turns when known. Ask a focused follow-up when the answer would change the tool call. Dispatch validated calls, collect evidence, and check the final answer. Use a CLI as the first entry point."}
+	],
+	"edges":[
+		{"id":"490525a24437670e","fromNode":"02d2a88b4638f10f","fromSide":"right","toNode":"e87a70cacea693ca","toSide":"left"},
+		{"id":"39fe78dfbbc21082","fromNode":"2c4bdcfd879591b6","fromSide":"right","toNode":"02d2a88b4638f10f","toSide":"left"},
+		{"id":"dc6191793413ce83","fromNode":"5246ccffa62ce886","fromSide":"right","toNode":"2c4bdcfd879591b6","toSide":"left"},
+		{"id":"d894cd23a72d5250","fromNode":"e0523b26e76a6630","fromSide":"right","toNode":"30b4d296b3895021","toSide":"left"},
+		{"id":"2b02236cbe7cbf88","fromNode":"e0523b26e76a6630","fromSide":"right","toNode":"3c739cb13a6f51a2","toSide":"left"},
+		{"id":"3f2c6657a0754aae","fromNode":"30b4d296b3895021","fromSide":"right","toNode":"d13eca7f911d3a52","toSide":"left"},
+		{"id":"e543a9937b5e95c9","fromNode":"3c739cb13a6f51a2","fromSide":"right","toNode":"d13eca7f911d3a52","toSide":"left"},
+		{"id":"c36a705316cff716","fromNode":"bb23573678e46a5c","fromSide":"right","toNode":"d13eca7f911d3a52","toSide":"left"},
+		{"id":"109e65b05d50e83a","fromNode":"b62328a2a10efe80","fromSide":"right","toNode":"bb23573678e46a5c","toSide":"left"},
+		{"id":"9beb5ccdd8164a03","fromNode":"2f8e9d9847386d06","fromSide":"right","toNode":"d13eca7f911d3a52","toSide":"left"}
+	]
+}
